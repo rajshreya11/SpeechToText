@@ -15,7 +15,3 @@ class Transcription(Base):
 
     language = Column(String(50), nullable=True)
 
-    created_at = Column(
-        DateTime(timezone=False),
-        server_default=func.now()
-    )
