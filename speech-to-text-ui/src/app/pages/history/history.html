@@ -1,0 +1,218 @@
+
+<div class="history-page">
+
+  <!-- Navigation -->
+  <header class="topbar">
+
+    <a routerLink="/" class="brand">
+      🎙️ Speech Studio
+    </a>
+
+    <nav>
+      <a routerLink="/">Home</a>
+      <a routerLink="/transcribe">Transcribe</a>
+      <a routerLink="/history" class="active">My History</a>
+    </nav>
+
+  </header>
+
+  <main class="content">
+
+    <!-- Page Heading -->
+    <section class="page-heading">
+
+      <span class="eyebrow">YOUR SAVED RECORDINGS</span>
+
+      <h1>Transcription <span>History</span></h1>
+
+      <p>View, edit and manage all your saved transcripts.</p>
+
+    </section>
+
+    <!-- Toolbar -->
+    <section class="history-toolbar">
+
+      <div>
+        <h2>My Transcripts</h2>
+        <p>{{ transcriptions.length }} saved records</p>
+      </div>
+
+      <button
+        class="refresh-btn"
+        (click)="loadTranscriptions()"
+        [disabled]="isLoading">
+
+        ↻ Refresh
+
+      </button>
+
+    </section>
+
+    <!-- Success Message -->
+    @if (successMessage) {
+      <div class="success-message">
+        ✓ {{ successMessage }}
+      </div>
+    }
+
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <div class="error-message">
+        ⚠ {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Loading State -->
+    @if (isLoading) {
+
+      <div class="empty-state">
+        <div class="loading-spinner"></div>
+        <p>Loading your transcription history...</p>
+      </div>
+
+    } @else if (transcriptions.length === 0) {
+
+      <!-- Empty State -->
+      <div class="empty-state">
+
+        <span class="empty-icon">📝</span>
+
+        <h2>No transcripts yet</h2>
+
+        <p>Your saved speech transcriptions will appear here.</p>
+
+        <a routerLink="/transcribe" class="primary-btn">
+          🎙️ Start Transcribing
+        </a>
+
+      </div>
+
+    } @else {
+
+      <!-- History List -->
+      <section class="history-list">
+
+        @for (item of transcriptions; track item.id) {
+
+          <article class="history-card">
+
+            <!-- Card Header -->
+            <div class="card-header">
+
+              <div class="record-info">
+
+                <span class="record-id">
+                  RECORD #{{ item.id }}
+                </span>
+
+                <span class="language-badge">
+                  {{ item.language || 'Unknown' }}
+                </span>
+
+              </div>
+
+              <span class="record-date">
+                {{ item.created_at | date:'medium' }}
+              </span>
+
+            </div>
+
+            <!-- Edit Mode -->
+            @if (editingId === item.id) {
+
+              <div class="edit-area">
+
+                <label [for]="'editText-' + item.id">
+                  Transcript Text
+                </label>
+
+                <textarea
+                  [id]="'editText-' + item.id"
+                  [(ngModel)]="editedText"
+                  [name]="'editedText-' + item.id"
+                  rows="5"
+                  placeholder="Edit your transcript">
+                </textarea>
+
+                <label [for]="'editLanguage-' + item.id">
+                  Language
+                </label>
+
+                <select
+                  [id]="'editLanguage-' + item.id"
+                  [(ngModel)]="editedLanguage"
+                  [name]="'editedLanguage-' + item.id">
+
+                  <option value="Hindi">Hindi</option>
+                  <option value="English (India)">English (India)</option>
+
+                </select>
+
+                <div class="action-buttons">
+
+                  <button
+                    class="save-btn"
+                    (click)="updateTranscript(item.id)">
+
+                    ✓ Save Changes
+
+                  </button>
+
+                  <button
+                    class="cancel-btn"
+                    (click)="cancelEdit()">
+
+                    Cancel
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            } @else {
+
+              <!-- Transcript Content -->
+              <div class="transcript-text">
+                {{ item.original_text }}
+              </div>
+
+              <!-- Card Actions -->
+              <div class="card-actions">
+
+                <button
+                  class="edit-btn"
+                  (click)="startEdit(item)">
+
+                  ✏️ Edit
+
+                </button>
+
+                <button
+                  class="delete-btn"
+                  (click)="deleteTranscript(item.id)">
+
+                  🗑️ Delete
+
+                </button>
+
+              </div>
+
+            }
+
+          </article>
+
+        }
+
+      </section>
+
+    }
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © 2026 Speech Studio. Built for everyone who speaks.
+  </footer>
+
+</div>

@@ -1,0 +1,252 @@
+
+<div class="page-container">
+
+  <!-- Navigation -->
+  <header class="navbar">
+    <a routerLink="/" class="brand">
+      <span class="brand-icon">🎙</span>
+      <span>Speech Studio</span>
+    </a>
+
+    <a routerLink="/history" class="history-link">
+      My History ↗
+    </a>
+  </header>
+
+  <main class="main-content">
+
+    <!-- Page Heading -->
+    <section class="heading-section">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        AI POWERED SPEECH RECOGNITION
+      </div>
+
+      <h1>
+        Turn Your Voice<br>
+        <span>Into Text.</span>
+      </h1>
+
+      <p>
+        Speak naturally in Hindi or English and let AI transform
+        your conversations into text.
+      </p>
+    </section>
+
+    <!-- Recorder -->
+    <section class="recording-card">
+
+      <div class="card-heading">
+        <div>
+          <h2>🎙 Voice Recorder</h2>
+          <p>Choose your language and start speaking.</p>
+        </div>
+
+        <span class="status-badge"
+              [class.recording-status]="isRecording"
+              [class.processing-status]="isSaving">
+
+          <span class="status-dot"></span>
+
+          {{ isRecording ? 'Recording' : isSaving ? 'Processing' : 'Ready' }}
+
+        </span>
+      </div>
+
+      <!-- Language -->
+      <div class="language-section">
+        <label for="language">SELECT LANGUAGE</label>
+
+        <select
+          id="language"
+          [value]="selectedLanguage"
+          [disabled]="isRecording || isSaving"
+          (change)="changeLanguage($any($event.target).value)">
+
+          <option value="hi-IN">Hindi (हिन्दी)</option>
+          <option value="en-IN">English</option>
+
+        </select>
+      </div>
+
+      <!-- Microphone -->
+      <div class="microphone-section">
+
+        <div class="mic-circle"
+             [class.mic-active]="isRecording">
+
+          <span class="mic-icon">🎙</span>
+
+        </div>
+
+        <h3>
+          {{
+            isRecording
+              ? 'Listening to your voice...'
+              : isSaving
+                ? 'Transcribing your audio...'
+                : 'Ready to record'
+          }}
+        </h3>
+
+        <p>
+          {{
+            isRecording
+              ? 'Speak clearly into your microphone.'
+              : isSaving
+                ? 'Please wait while AI processes your recording.'
+                : 'Click the button below to start recording.'
+          }}
+        </p>
+
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-section">
+
+        <button
+          type="button"
+          class="btn btn-start"
+          (click)="startRecording()"
+          [disabled]="isRecording || isSaving">
+
+          🎙 Start Recording
+
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-stop"
+          (click)="stopRecording()"
+          [disabled]="!isRecording">
+
+          ■ Stop & Transcribe
+
+        </button>
+
+      </div>
+
+      <!-- Error -->
+      @if (errorMessage) {
+        <div class="message error-message">
+          ⚠ {{ errorMessage }}
+        </div>
+      }
+
+      <!-- Success -->
+      @if (successMessage) {
+        <div class="message success-message">
+          ✓ {{ successMessage }}
+        </div>
+      }
+
+    </section>
+
+    <!-- Live Preview -->
+    <section class="transcript-card">
+
+      <div class="transcript-header">
+        <div>
+          <h2>Live Transcript</h2>
+          <p>Your speech preview will appear here.</p>
+        </div>
+
+        <span class="preview-label">LIVE PREVIEW</span>
+      </div>
+
+      <div class="transcript-content">
+
+        @if (interimTranscript) {
+          <p class="transcript-text">{{ interimTranscript }}</p>
+        } @else {
+          <div class="empty-state">
+            <span>✦</span>
+            <p>Waiting for your voice...</p>
+          </div>
+        }
+
+      </div>
+
+    </section>
+
+    <!-- Final Transcription -->
+    <section class="transcript-card">
+
+      <div class="transcript-header">
+        <div>
+          <h2>Final Transcription</h2>
+          <p>Your completed transcription will appear here.</p>
+        </div>
+
+        <span class="final-label">COMPLETED</span>
+      </div>
+
+      <div class="transcript-content">
+
+        @if (transcript) {
+          <p class="transcript-text">{{ transcript }}</p>
+        } @else {
+          <div class="empty-state">
+            <span>✧</span>
+            <p>Your final transcript will appear here.</p>
+          </div>
+        }
+
+      </div>
+
+      @if (transcript) {
+        <div class="transcript-footer">
+
+          <span class="character-count">
+            {{ transcript.length }} characters
+          </span>
+
+          <button
+            type="button"
+            class="btn btn-clear"
+            (click)="clearTranscript()"
+            [disabled]="isSaving">
+            Clear Transcript
+          </button>
+
+        </div>
+      }
+
+    </section>
+
+    <!-- Features -->
+    <section class="feature-row">
+
+      <div class="feature-item">
+        <span class="feature-icon">🌐</span>
+        <div>
+          <strong>Multilingual</strong>
+          <p>Hindi + English</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">⚡</span>
+        <div>
+          <strong>AI Powered</strong>
+          <p>Smart transcription</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <span class="feature-icon">🔒</span>
+        <div>
+          <strong>Saved History</strong>
+          <p>Access anytime</p>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    Speech Studio · Powered by AI Speech Recognition
+  </footer>
+
+</div>
